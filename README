@@ -1,0 +1,5 @@
+after_commit
+===========
+
+A Ruby on Rails plugin to add an after_commit callback. This can be used to
+trigger things only after the entire transaction is complete.
