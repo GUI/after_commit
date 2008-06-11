@@ -11,6 +11,9 @@ module AfterCommit
         # doesn't exist, we define the callback manually
         if respond_to?(:define_callbacks)
           define_callbacks :after_commit
+          define_callbacks :after_commit_on_create
+          define_callbacks :after_commit_on_update
+          define_callbacks :after_commit_on_destroy
         else
           class << self
             # Handle after_commit callbacks - call all the registered callbacks.
@@ -18,16 +21,46 @@ module AfterCommit
               callbacks << block if block_given?
               write_inheritable_array(:after_commit, callbacks)
             end
+            
+            def after_commit_on_create(*callbacks, &block)
+              callbacks << block if block_given?
+              write_inheritable_array(:after_commit_on_create_callback, callbacks)
+            end
+            
+            def after_commit_on_update(*callbacks, &block)
+              callbacks << block if block_given?
+              write_inheritable_array(:after_commit_on_update_callback, callbacks)
+            end
+            
+            def after_commit_on_destroy(*callbacks, &block)
+              callbacks << block if block_given?
+              write_inheritable_array(:after_commit_on_destroy_callback, callbacks)
+            end
           end
         end
 
-        after_save :add_committed_record
-        after_destroy :add_committed_record
+        after_save    :add_committed_record
+        after_create  :add_committed_record_on_create
+        after_update  :add_committed_record_on_update
+        after_destroy :add_committed_record_on_destroy
 
         # We need to keep track of records that have been saved or destroyed
         # within this transaction.
         def add_committed_record
           AfterCommit.committed_records << self
+        end
+        
+        def add_committed_record_on_create
+          AfterCommit.committed_records_on_create << self
+        end
+        
+        def add_committed_record_on_update
+          AfterCommit.committed_records_on_update << self
+        end
+        
+        def add_committed_record_on_destroy
+          AfterCommit.committed_records << self
+          AfterCommit.committed_records_on_destroy << self
         end
 
         # Wraps a call to the private callback method so that the the
@@ -35,6 +68,18 @@ module AfterCommit
         # the commit for the transaction has finally succeeded. 
         def after_commit_callback
           callback(:after_commit)
+        end
+        
+        def after_commit_on_create_callback
+          callback(:after_commit_on_create)
+        end
+        
+        def after_commit_on_update_callback
+          callback(:after_commit_on_create)
+        end
+        
+        def after_commit_on_destroy_callback
+          callback(:after_commit_on_destroy)
         end
       end
     end
