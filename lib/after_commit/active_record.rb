@@ -10,10 +10,10 @@ module AfterCommit
         # The define_callbacks method was added post Rails 2.0.2 - if it
         # doesn't exist, we define the callback manually
         if respond_to?(:define_callbacks)
-          define_callbacks :after_commit
-          define_callbacks :after_commit_on_create
-          define_callbacks :after_commit_on_update
-          define_callbacks :after_commit_on_destroy
+          define_callbacks  :after_commit,
+                            :after_commit_on_create,
+                            :after_commit_on_update,
+                            :after_commit_on_destroy
         else
           class << self
             # Handle after_commit callbacks - call all the registered callbacks.
@@ -75,7 +75,7 @@ module AfterCommit
         end
         
         def after_commit_on_update_callback
-          callback(:after_commit_on_create)
+          callback(:after_commit_on_update)
         end
         
         def after_commit_on_destroy_callback
