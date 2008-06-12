@@ -1,5 +1,13 @@
 after_commit
 ===========
 
-A Ruby on Rails plugin to add an after_commit callback. This can be used to
-trigger things only after the entire transaction is complete.
+A Ruby on Rails plugin to add after_commit callbacks. The callbacks that are provided can be used
+to trigger events that run only after the entire transaction is complete. This is beneficial
+in situations where you are doing asynchronous processing and need committed objects.
+
+The callbacks that are provided are:
+  
+   * (1) after_commit
+   * (2) after_commit_on_create
+   * (3) after_commit_on_update
+   * (4) after_commit_on_destroy
