@@ -24,17 +24,17 @@ module AfterCommit
             
             def after_commit_on_create(*callbacks, &block)
               callbacks << block if block_given?
-              write_inheritable_array(:after_commit_on_create_callback, callbacks)
+              write_inheritable_array(:after_commit_on_create, callbacks)
             end
             
             def after_commit_on_update(*callbacks, &block)
               callbacks << block if block_given?
-              write_inheritable_array(:after_commit_on_update_callback, callbacks)
+              write_inheritable_array(:after_commit_on_update, callbacks)
             end
             
             def after_commit_on_destroy(*callbacks, &block)
               callbacks << block if block_given?
-              write_inheritable_array(:after_commit_on_destroy_callback, callbacks)
+              write_inheritable_array(:after_commit_on_destroy, callbacks)
             end
           end
         end
